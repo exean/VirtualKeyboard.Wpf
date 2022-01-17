@@ -16,6 +16,8 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid Background="{DynamicResource KeyboardBackgroundAccentBrush}">
-        <controls:AdvancedTextBox TextValue="{Binding KeyboardText, Mode=TwoWay}" CaretPosition="{Binding CaretPosition, Mode=TwoWay}" SelectedValue="{Binding SelectedValue, Mode=TwoWay}" Style="{DynamicResource KeyboardValueBoxStyle}"/>
+        <controls:AdvancedTextBox ScrollViewer.VerticalScrollBarVisibility="Auto"
+            AcceptsReturn="True"
+            TextValue="{Binding KeyboardText, Mode=TwoWay}" CaretPosition="{Binding CaretPosition, Mode=TwoWay}" SelectedValue="{Binding SelectedValue, Mode=TwoWay}" Style="{DynamicResource KeyboardValueBoxStyle}"/>
     </Grid>
 </UserControl>

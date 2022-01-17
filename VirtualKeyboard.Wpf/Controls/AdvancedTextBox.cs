@@ -81,6 +81,7 @@ namespace VirtualKeyboard.Wpf.Controls
             string value = e.NewValue as string;
             s.Text = value;
             s.CaretIndex = caretPosition <= value.Length ? caretPosition : value.Length;
+            s.ScrollToEnd();
         }
     }
 }

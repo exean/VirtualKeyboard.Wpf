@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 using VirtualKeyboard.Wpf.Types;
 using VirtualKeyboard.Wpf.Views;
@@ -17,8 +13,9 @@ namespace VirtualKeyboard.Wpf.Converters
             var type = (KeyboardType)value;
             switch (type)
             {
-                case KeyboardType.Alphabet: return new AlphabetView();
+                case KeyboardType.Alphabet: return (culture?.TwoLetterISOLanguageName?.Equals("de")??false) ? new AlphabetViewDE() : new AlphabetView();
                 case KeyboardType.Special: return new SpecialCharactersView();
+                case KeyboardType.Numeric: return new NumericView();
             }
             return null;
         }

@@ -27,6 +27,13 @@
             </Canvas>
         </Viewbox>
     </Button>
+    <Button Style="{DynamicResource KeyboardButtonStyle}" x:Key="LinebreakButton" Command="{Binding Linebreak}">
+        <Viewbox>
+            <Canvas Width="24" Height="24">
+                <Path Data="M19,7V11H5.83L9.41,7.41L8,6L2,12L8,18L9.41,16.58L5.83,13H21V7H19Z" />
+            </Canvas>
+        </Viewbox>
+    </Button>
     <Button Style="{DynamicResource KeyboardButtonStyle}" x:Key="CasingButton" Command="{Binding ChangeCasing}">
         <Viewbox>
             <Canvas Width="24" Height="24">

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using VirtualKeyboard.Wpf.Controls;
+using VirtualKeyboard.Wpf.Types;
 using VirtualKeyboard.Wpf.ViewModels;
 using VirtualKeyboard.Wpf.Views;
 
@@ -35,23 +36,33 @@ namespace VirtualKeyboard.Wpf
             EventManager.RegisterClassHandler(typeof(T), UIElement.PreviewMouseLeftButtonDownEvent, (RoutedEventHandler)(async (s, e) =>
             {
                 if (s is AdvancedTextBox) return;
+                bool acceptsReturn = false;
+                bool onlyNumericInput = false;
+                int maxLength = 0;
+                if (s is TextBox src)
+                {
+                    acceptsReturn = src.AcceptsReturn;
+                    onlyNumericInput = "numeric".Equals(src.Tag);
+                    maxLength = src.MaxLength;
+                }
                 var memberSelectorExpression = property.Body as MemberExpression;
                 if (memberSelectorExpression == null) return;
                 var prop = memberSelectorExpression.Member as PropertyInfo;
                 if (prop == null) return;
                 var initValue = (string)prop.GetValue(s);
-                var value = await OpenAsync(initValue);
+                var value = await OpenAsync(initValue, acceptsReturn, onlyNumericInput, maxLength);
                 prop.SetValue(s, value, null);
             }));
         }
 
-        public static Task<string> OpenAsync(string initialValue = "")
+        public static Task<string> OpenAsync(string initialValue = "", bool acceptsReturn = false,  bool onlyNumericInput = false, int maxLength = 0)
         {
             if (_windowHost != null) throw new InvalidOperationException();
 
+
             _tcs = new TaskCompletionSource<string>();
             _windowHost = (Window)Activator.CreateInstance(_hostType);
-            _windowHost.DataContext = new VirtualKeyboardViewModel(initialValue);
+            _windowHost.DataContext = new VirtualKeyboardViewModel(initialValue, acceptsReturn, onlyNumericInput, maxLength);
             ((ContentControl)_windowHost.FindName(_keyboardValueName)).Content = new KeyboardValueView();
             ((ContentControl)_windowHost.FindName(_keyboardName)).Content = new VirtualKeyboardView();
             void handler(object s, CancelEventArgs a)
@@ -65,9 +76,28 @@ namespace VirtualKeyboard.Wpf
 
             _windowHost.Closing += handler;
 
-            _windowHost.Owner = Application.Current.MainWindow;
+            _windowHost.Owner = GetMainWindow();
             _windowHost.Show();
             return _tcs.Task;
+        }
+        private static Window GetMainWindow()
+        {
+            try
+            {
+                WindowCollection windows = Application.Current.Windows;
+                foreach (Window window in windows)
+                {
+                    if (window.IsVisible && "MainWindow".Equals(window.Tag))
+                    {
+                        return window;
+                    }
+                }
+            }
+            catch (Exception _e)
+            {
+                //Debug.WriteLine(_e.Message);
+            }
+            return Application.Current.MainWindow;
         }
 
         public static void Close()
