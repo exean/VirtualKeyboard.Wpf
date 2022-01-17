@@ -1,3 +1,9 @@
+Changes in this fork:
+- support for German localization (based on xaml-localization specified in the application)  
+- Multiline support (based on the "AcceptsReturn" value of the host TextBox)
+- Only numeric keys (set Tag on the host TextBox to "numeric")
+- MaxLength support (based on the "MaxLength" value of the host TextBox)
+
 # VirtualKeyboard.Wpf
 ![look](look.png)
 Virtual keyboard for wpf - designed to be used in kiosk-like applications
